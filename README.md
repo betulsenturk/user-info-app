@@ -13,6 +13,8 @@ yapılacaklar;
 6) Veritabanına erişim için ORM kullanılabilir ( Dapper, Entity Framework, NHibernate vb.), direkt olarak ADO.NET bağlantısı da sağlanabilir. Tercih edilen herhangi bir ilişkisel ya da NoSQL veritabanı kullanılabilir.
 
 
+Projenin videosuna erişmek için linke tıklayınız -> [Video Linki](https://drive.google.com/file/d/1W4jLGdwBrrix2BZExmHIm47VgVBkR-HK/view?usp=sharing)
+
 
 
 
