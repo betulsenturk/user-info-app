@@ -1,0 +1,132 @@
+﻿@using WebApplication5.Models.Entity
+@model List<Tbl_Musteriler>
+
+@{
+    ViewBag.Title = "Oranlar";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<h2>Oranlar</h2>
+@{
+    var sifirOnbes = 0;
+    var onbesOtuz = 0;
+    var otuzKirkbes = 0;
+    var kirkbesUstu = 0;
+    var erkek = 0;
+    var kadin = 0;
+}
+@foreach (var kullanici in Model)
+{
+    int[] months = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    int birthday = kullanici.DogumTarihi.Value.Day;
+    int birthmonth = kullanici.DogumTarihi.Value.Month;
+    int birthYear = kullanici.DogumTarihi.Value.Year;
+
+    int currentDay = DateTime.Now.Day;
+    int currentMonth = DateTime.Now.Month;
+    int currentYear = DateTime.Now.Year;
+
+    if (birthday > currentDay)
+    {
+        currentMonth = currentMonth - 1;
+        currentDay = currentDay + months[birthmonth - 1];
+    }
+
+    if (birthmonth > currentMonth)
+    {
+        currentYear = currentYear - 1;
+        currentMonth = currentMonth + 12;
+    }
+
+    int yasYil = currentYear - birthYear;
+
+
+    int age = yasYil;
+
+    if (age > 45)
+    {
+        kirkbesUstu++;
+    }
+    else if (age > 30)
+    {
+        otuzKirkbes++;
+    }
+    else if (age > 15)
+    {
+        onbesOtuz++;
+    }
+    else if (age >= 0)
+    {
+        sifirOnbes++;
+    }
+
+    if (kullanici.Cinsiyet.Equals("Erkek"))
+    {
+        erkek++;
+    }
+    else if (kullanici.Cinsiyet.Equals("Kadin")){
+        kadin++;
+    }
+}
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<canvas id="pie" style="width:100%;max-width:600px"></canvas>
+<br /><br />
+<canvas id="bar" style="width:100%;max-width:600px"></canvas>
+<br /><br />
+
+
+<script>
+    var xValues = ["Erkek", "Kadın"];
+    var yValues = [@erkek, @kadin];
+    var barColors = ["rgb(54, 162, 235)", "rgb(255, 205, 86)"];
+
+    new Chart("pie", {
+        type: "pie",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: "Cinsiyet Oranı"
+            }
+        }
+    });
+</script>
+<script>
+    var xValues = ["0-15", "15-30", "30-45", "45+"];
+    var yValues = [@sifirOnbes, @onbesOtuz, @otuzKirkbes, @kirkbesUstu];
+    var barColors = ["rgb(255, 205, 86)", "rgb(54, 162, 235)", "rgb(255, 99, 132)", "rgb(184, 255, 84)"];
+
+    new Chart("bar", {
+        type: "bar",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+            }]
+        },
+        options: {
+            legend: { display: false },
+            title: {
+                display: true,
+                text: "Yaş Ortalamaları"
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+

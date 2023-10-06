@@ -1,0 +1,99 @@
+﻿@using WebApplication5.Models.Entity
+@model List<Tbl_Musteriler>
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<h2>Kullanıcı Listesi</h2>
+
+<table id="tbl1" class="table table-bordered">
+    <thead>
+        <tr>
+            <th>İSİM</th>
+            <th>SOYAD</th>
+            <th>DOĞUM TARİHİ</th>
+            <th>YAŞ</th>
+            <th>CİNSİYET</th>
+            <th>YAŞADIĞI YER</th>
+            <th>FOTOĞRAF</th>
+            <th>SİL</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var kullanici in Model)
+        {
+        <tr>
+            <td>@kullanici.Isim</td>
+            <td>@kullanici.Soyad</td>
+            @{var date_birth = kullanici.DogumTarihi?.ToString("dd-MM-yyyy") ?? string.Empty;}
+            <td>@date_birth</td>
+            @{
+                
+                int[] months = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+                int birthday = kullanici.DogumTarihi.Value.Day;
+                int birthmonth = kullanici.DogumTarihi.Value.Month;
+                int birthYear = kullanici.DogumTarihi.Value.Year;
+
+                int currentDay = DateTime.Now.Day;
+                int currentMonth = DateTime.Now.Month;
+                int currentYear = DateTime.Now.Year;
+
+                if (birthday > currentDay)
+                {
+                    currentMonth = currentMonth - 1;
+                    currentDay = currentDay + months[birthmonth - 1];
+                }
+
+                if (birthmonth > currentMonth)
+                {
+                    currentYear = currentYear - 1;
+                    currentMonth = currentMonth + 12;
+                }
+
+                int yasGun = currentDay - birthday;
+                int yasAy = currentMonth - birthmonth;
+                int yasYil = currentYear - birthYear;
+
+                string sYasGun = System.Convert.ToString(yasGun);
+                string sYasAy = System.Convert.ToString(yasAy);
+                string sYasYil = System.Convert.ToString(yasYil);
+
+                if (yasYil >= 0 && yasYil <= 9) {sYasYil = "0" + sYasYil;}
+                if (yasAy >= 0 && yasAy <= 9){sYasAy = "0" + sYasAy;}
+                if (yasGun >= 0 && yasGun <= 9){sYasGun = "0" + sYasGun;}
+
+
+                string age =sYasYil + " yıl " + sYasAy + " ay " + sYasGun + " gün";
+            }
+            
+            <td>@age</td>
+            <td>@kullanici.Cinsiyet</td>
+            <td>@kullanici.Tbl_Sehirler.SehirAd</td>
+            @if (kullanici.Fotograf != null)
+            {
+                <td><img src="@Url.Content("../Content/Images/" + @kullanici.Fotograf)" width="50" height="50" /></td>
+            }
+            else
+            {
+                <td></td>
+            }
+
+            <td><a href="/Kullanici/SIL/@kullanici.ID" class="btn btn-danger">SİL</a></td>
+        </tr>
+        }
+    </tbody>
+</table>
+<a href="/Kullanici/YeniKullanici/" class="btn btn-primary">YENİ KULLANICI EKLE</a>
+
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+<script type="text/javascript" src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tbl1').dataTable(); 
+    })
+</script>
+

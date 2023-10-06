@@ -1,0 +1,51 @@
+﻿@model WebApplication5.Models.Entity.Tbl_Musteriler
+@{
+    ViewBag.Title = "YeniKullanici";
+    Layout = "~/Views/Shared/_MainLayout.cshtml";
+}
+
+<form class="form-group" method="post">
+    <div>
+        <label>Kullanıcı Adı:</label>
+        <input type="text" class="form-control" name="Isim" required/>
+    </div>
+    <div>
+        <label>Kullanıcı Soyad:</label>
+        <input type="text" class="form-control" name="Soyad" required/>
+    </div>
+    <div>
+        <label>Kullanıcı Doğum Tarihi:</label>
+        <input type="date" id="demo" class="form-control" min="1893-01-01" name="DogumTarihi" required/>
+    </div>
+    <div>
+        <label>Kullanıcı Cinsiyet:</label>
+        <input type="text" class="form-control" name="Cinsiyet" required/>
+    </div>
+    <div>
+        <label>Yaşadığı Yer:</label>
+        @Html.DropDownListFor(m => m.Tbl_Sehirler.SehirID, (List<SelectListItem>)ViewBag.dgr, new { @class = "form-select" })
+    </div>
+    <div>
+        <label>Fotoğraf:</label>
+        <input type="file" class="form-control" name="Fotograf" />
+    </div>
+    <div style="margin-top:15px;">
+        <button class="btn btn-info">Kullanıcı Ekle</button>
+    </div>
+</form>
+
+<script>
+    var todayDate = new Date();
+    var month = todayDate.getMonth() + 1;
+    var year = todayDate.getUTCFullYear();
+    var tdate = todayDate.getDate();
+    if (month < 10) {
+        month = "0" + month;
+    }
+    if (tdate < 10) {
+        tdate = "0" + tdate;
+    }
+    var maxdate = year + "-" + month + "-" + tdate;
+    document.getElementById("demo").setAttribute("max", maxdate);
+</script>
+
